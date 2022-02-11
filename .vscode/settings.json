@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "stm32f0xx_hal.h": "c",
+        "stm32f0xx_hal_conf.h": "c",
+        "stm32f0xx_hal_rcc.h": "c",
+        "stm32f0xx_hal_def.h": "c",
+        "stm32f0xx.h": "c",
+        "usart.h": "c",
+        "gpio.h": "c",
+        "concepts": "c",
+        "cstdio": "c",
+        "type_traits": "c",
+        "new": "c",
+        "typeinfo": "c",
+        "fifo.h": "c"
+    }
+}

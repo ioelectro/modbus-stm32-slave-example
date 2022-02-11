@@ -26,6 +26,7 @@
 /* USER CODE BEGIN Includes */
 #include <string.h>
 #include "fifo.h"
+#include "mb.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
