@@ -39,6 +39,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   HAL_UART_Receive_IT(&huart1,&UartRxCh,1);
 }
 
+void mb_send(uint8_t *Data,uint8_t Len)
+{
+
+}
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -96,7 +101,10 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+
   FIFO_Init(128);
+  mb_set_tx_handler(&mb_send);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,9 +114,7 @@ int main(void)
   {
     if(FIFO_Read(&Ch)==FIFO_OK)
     {
-      HAL_UART_Transmit(&huart1,&Ch,1,100);
-      HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
-      HAL_Delay(10);
+      mb_rx_new_data(Ch);
     }
     /* USER CODE END WHILE */
 

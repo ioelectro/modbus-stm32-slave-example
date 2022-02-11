@@ -60,12 +60,14 @@ Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_flash_ex.c \
 Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_exti.c \
 Core/Src/system_stm32f0xx.c \
 Drivers/fifo/fifo.c \
+Drivers/modbus/mb.c \
 Drivers/modbus/mb-check.c \
 Drivers/modbus/mb-crc.c \
 Drivers/modbus/mb-link.c \
 Drivers/modbus/mb-packet.c \
 Drivers/modbus/mb-process.c \
-Drivers/modbus/mb.c
+Drivers/modbus/mb-table.c
+
 
 
 # ASM sources
