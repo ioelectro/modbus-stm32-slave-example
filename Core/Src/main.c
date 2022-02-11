@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -44,6 +45,23 @@ void uart_send(uint8_t *Data,uint8_t Len)
   HAL_UART_Transmit_IT(&huart1,Data,Len);
 }
 
+//Timeout Signal
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if(htim->Instance==TIM1)
+  {
+    HAL_TIM_Base_Stop_IT(&htim1);
+    mb_rx_timeout_handler();
+  }
+}
+
+void timeout_timer_reset()
+{
+  //Reset Timer
+  TIM1->CNT=0;
+  HAL_TIM_Base_Start_IT(&htim1);
+}
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -56,6 +74,7 @@ void uart_send(uint8_t *Data,uint8_t Len)
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -100,9 +119,10 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  FIFO_Init(128);
+  FIFO_Init(64);
   mb_set_tx_handler(&uart_send);
 
   /* USER CODE END 2 */
@@ -115,7 +135,7 @@ int main(void)
     if(FIFO_Read(&Ch)==FIFO_OK)
     {
       mb_rx_new_data(Ch);
-      //uart_send(&Ch,1);
+      timeout_timer_reset();
     }
     /* USER CODE END WHILE */
 
