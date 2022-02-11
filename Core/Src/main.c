@@ -48,15 +48,21 @@ void uart_send(uint8_t *Data,uint8_t Len)
 
 void add_random_data()
 {
-  uint16_t Data;
-  Data=rand();
-  mb_table_write(TBALE_Coils,0,Data);
-  Data=rand();
-  mb_table_write(TBALE_Discretes_Input,0,Data);
-  Data=rand();
-  mb_table_write(TBALE_Input_Registers,0,Data);
-  Data=rand();
-  mb_table_write(TABLE_Holding_Registers,0,Data);
+  int i;
+
+  mb_table_write(TBALE_Coils,0,rand());
+  mb_table_write(TBALE_Discretes_Input,0,rand());
+
+  for(i=0;i<10;i++)
+  {
+    mb_table_write(TBALE_Input_Registers,i,rand());
+  }
+
+  for(i=0;i<10;i++)
+  {
+    mb_table_write(TABLE_Holding_Registers,i,rand());
+  }
+
 }
 
 //Timeout Signal
