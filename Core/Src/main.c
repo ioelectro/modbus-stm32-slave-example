@@ -39,9 +39,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   HAL_UART_Receive_IT(&huart1,&UartRxCh,1);
 }
 
-void mb_send(uint8_t *Data,uint8_t Len)
+void uart_send(uint8_t *Data,uint8_t Len)
 {
-
+  HAL_UART_Transmit_IT(&huart1,Data,Len);
 }
 
 /* USER CODE END PTD */
@@ -103,7 +103,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   FIFO_Init(128);
-  mb_set_tx_handler(&mb_send);
+  mb_set_tx_handler(&uart_send);
 
   /* USER CODE END 2 */
 
@@ -115,6 +115,7 @@ int main(void)
     if(FIFO_Read(&Ch)==FIFO_OK)
     {
       mb_rx_new_data(Ch);
+      //uart_send(&Ch,1);
     }
     /* USER CODE END WHILE */
 
