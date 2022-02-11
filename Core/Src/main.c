@@ -28,6 +28,7 @@
 #include <string.h>
 #include "fifo.h"
 #include "mb.h"
+#include "mb-table.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,6 +46,19 @@ void uart_send(uint8_t *Data,uint8_t Len)
   HAL_UART_Transmit_IT(&huart1,Data,Len);
 }
 
+void add_random_data()
+{
+  uint16_t Data;
+  Data=rand();
+  mb_table_write(TBALE_Coils,0,Data);
+  Data=rand();
+  mb_table_write(TBALE_Discretes_Input,0,Data);
+  Data=rand();
+  mb_table_write(TBALE_Input_Registers,0,Data);
+  Data=rand();
+  mb_table_write(TABLE_Holding_Registers,0,Data);
+}
+
 //Timeout Signal
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -52,6 +66,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   {
     HAL_TIM_Base_Stop_IT(&htim1);
     mb_rx_timeout_handler();
+
+    //Add Some Data to Table
+    add_random_data();
   }
 }
 
@@ -113,23 +130,21 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_TIM1_Init();
-  /* USER CODE BEGIN 2 */
+  /* USER CODE END SysInit */
 
+  /* Initialize all configured peripherals */
+  /* USER CODE BEGIN 2 */
   FIFO_Init(64);
   mb_set_tx_handler(&uart_send);
-
+  HAL_UART_Receive_IT(&huart1,&UartRxCh,1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  HAL_UART_Receive_IT(&huart1,&UartRxCh,1);
+
   while (1)
   {
     if(FIFO_Read(&Ch)==FIFO_OK)

@@ -13,6 +13,7 @@
         "type_traits": "c",
         "new": "c",
         "typeinfo": "c",
-        "fifo.h": "c"
+        "fifo.h": "c",
+        "mb-table.h": "c"
     }
 }
