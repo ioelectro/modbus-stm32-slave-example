@@ -119,7 +119,7 @@ AS_DEFS =
 C_DEFS =  \
 -DUSE_HAL_DRIVER \
 -DSTM32F030x6 \
--DMB_MODE=1 # Slave Mode
+-DMB_MODE=MB_MODE_SLAVE
 
 
 # AS includes
