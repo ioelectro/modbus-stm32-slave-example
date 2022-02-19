@@ -1,6 +1,6 @@
-[submodule ".\\Drivers\\fifo"]
-	path = .\\Drivers\\fifo
-	url = https://github.com/liyanboy74/fifo.git
-[submodule ".\\Drivers\\modbus"]
-	path = .\\Drivers\\modbus
+[submodule "modbus"]
+	path = modbus
 	url = https://github.com/liyanboy74/modbus.git
+[submodule "fifo"]
+	path = fifo
+	url = https://github.com/liyanboy74/fifo.git
