@@ -9,8 +9,8 @@
                 "${workspaceFolder}/Drivers/STM32F0xx_HAL_Driver/Src",
                 "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F0xx/Include",
                 "${workspaceFolder}/Drivers/CMSIS/Core/Include",
-                "${workspaceFolder}/Drivers/fifo",
-                "${workspaceFolder}/Drivers/modbus"
+                "${workspaceFolder}/fifo",
+                "${workspaceFolder}/modbus"
             ],
             "defines": [
                 "USE_HAL_DRIVER",
