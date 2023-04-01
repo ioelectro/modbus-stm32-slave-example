@@ -20,7 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "tim.h"
-#include "usart.h"
+#include "usb_device.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -29,21 +29,16 @@
 #include "fifo.h"
 #include "mb.h"
 #include "mb-table.h"
+#include "usbd_cdc_if.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-uint8_t UartRxCh;
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+void send_data(uint8_t *Data,uint8_t Len)
 {
-  FIFO_Add(UartRxCh);
-  HAL_UART_Receive_IT(&huart1,&UartRxCh,1);
-}
-
-void uart_send(uint8_t *Data,uint8_t Len)
-{
-  HAL_UART_Transmit_IT(&huart1,Data,Len);
+  CDC_Transmit_FS(Data,Len);
+  HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 }
 
 void add_random_data()
@@ -68,9 +63,9 @@ void add_random_data()
 //Timeout Signal
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  if(htim->Instance==TIM1)
+  if(htim->Instance==TIM4)
   {
-    HAL_TIM_Base_Stop_IT(&htim1);
+    HAL_TIM_Base_Stop_IT(&htim4);
     mb_rx_timeout_handler();
 
     //Add Some Data to Table
@@ -81,8 +76,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void timeout_timer_reset()
 {
   //Reset Timer
-  TIM1->CNT=0;
-  HAL_TIM_Base_Start_IT(&htim1);
+  TIM4->CNT=0;
+  HAL_TIM_Base_Start_IT(&htim4);
 }
 
 /* USER CODE END PTD */
@@ -137,15 +132,15 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   MX_GPIO_Init();
-  MX_USART1_UART_Init();
-  MX_TIM1_Init();
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_TIM4_Init();
+  MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
   FIFO_Init(64);
-  mb_set_tx_handler(&uart_send);
-  HAL_UART_Receive_IT(&huart1,&UartRxCh,1);
+  mb_set_tx_handler(&send_data);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -153,7 +148,7 @@ int main(void)
 
   while (1)
   {
-    if(FIFO_Read(&Ch)==FIFO_OK)
+    while(FIFO_Read(&Ch)==FIFO_OK)
     {
       mb_rx_new_data(Ch);
       timeout_timer_reset();
@@ -178,31 +173,33 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL12;
-  RCC_OscInitStruct.PLL.PREDIV = RCC_PREDIV_DIV1;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL6;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
   }
+
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1;
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
-  PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK1;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
+  PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
@@ -244,5 +241,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

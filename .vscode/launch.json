@@ -6,17 +6,16 @@
     "configurations": [
         {
             "name": "Cortex Debug",
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceFolder}",
             "executable": "./build/MBTest.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",
-            "device": "STM32F030F4T6",
+            "device": "STM32F103C8T6",
             "configFiles": [
                 "interface/stlink.cfg",
-                "target/stm32f0x.cfg"
-            ],
-            "svdFile": "./STM32F0x0.svd"
+                "target/stm32f1x.cfg"
+            ]
         }
     ]
 }

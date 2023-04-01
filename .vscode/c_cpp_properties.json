@@ -1,29 +1,24 @@
 {
     "configurations": [
         {
-            "name": "STM32",
+            "name": "STM32f103C8",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/Core",
-                "${workspaceFolder}/Drivers/STM32F0xx_HAL_Driver/Inc",
-                "${workspaceFolder}/Drivers/STM32F0xx_HAL_Driver/Src",
-                "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F0xx/Include",
-                "${workspaceFolder}/Drivers/CMSIS/Core/Include",
-                "${workspaceFolder}/fifo",
-                "${workspaceFolder}/modbus"
+                "${workspaceFolder}/*"
             ],
             "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
                 "USE_HAL_DRIVER",
-                "STM32F030x6"
+                "STM32F103xB"
             ],
-            "intelliSenseMode": "gcc-arm",
-            "compilerPath": "${env:ARMGCC_DIR}/arm-none-eabi-gcc.exe",
-            "compilerArgs": [
-                "-mcpu=cortex-m0",
-                "-mthumb"
-            ],
+            "windowsSdkVersion": "10.0.18362.0",
+            "compilerPath": "cl.exe",
             "cStandard": "c17",
-            "cppStandard": "c++17"
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4
