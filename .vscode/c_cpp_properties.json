@@ -4,7 +4,11 @@
             "name": "STM32f103C8",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/*"
+                "${workspaceFolder}/*",
+                "${workspaceFolder}/Core",
+                "${workspaceFolder}/Drivers/CMSIS/Core/Include",
+                "${workspaceFolder}/fifo",
+                "${workspaceFolder}/modbus"
             ],
             "defines": [
                 "_DEBUG",
