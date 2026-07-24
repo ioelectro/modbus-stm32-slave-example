@@ -70,7 +70,7 @@ fifo/fifo.c \
 modbus/mb.c \
 modbus/mb-check.c \
 modbus/mb-crc.c \
-modbus/mb-link.c \
+modbus/mb-rtu.c \
 modbus/mb-packet.c \
 modbus/mb-process.c \
 modbus/mb-table.c

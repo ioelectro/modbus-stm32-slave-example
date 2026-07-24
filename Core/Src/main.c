@@ -27,7 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include <string.h>
 #include "fifo.h"
-#include "mb.h"
+#include "mb-rtu.h"
 #include "mb-table.h"
 #include "usbd_cdc_if.h"
 /* USER CODE END Includes */
@@ -35,7 +35,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-void send_data(uint8_t *Data,uint8_t Len)
+void send_data(uint8_t *Data,uint16_t Len)
 {
   CDC_Transmit_FS(Data,Len);
   HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
